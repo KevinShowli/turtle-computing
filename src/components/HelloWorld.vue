@@ -34,7 +34,7 @@
       <el-table-column prop="open" label="Add"></el-table-column>
       <el-table-column prop="sell" label="Sell"></el-table-column>
     </el-table>
-    <el-dialog title="头寸单位计算" :visible.sync="dialogVisible" width="40%" :before-close="handleClose">
+    <el-dialog title="头寸单位计算" :visible.sync="dialogVisible" width="350px" :before-close="handleClose">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="资金总量" prop="money">
           <el-input-number v-model="ruleForm.money" controls-position="right" :min="1"></el-input-number>
@@ -56,7 +56,7 @@
         <el-button type="primary" @click="calculate">确 定</el-button>
       </span>
     </el-dialog>
-    <el-dialog :title="flag == 'buy' ? 'Buy' : 'Sell'" :visible.sync="buyDialog" width="40%" :before-close="buyClose">
+    <el-dialog :title="flag == 'buy' ? 'Buy' : 'Sell'" :visible.sync="buyDialog" width="350px" :before-close="buyClose">
       <el-form :model="buyForm" :rules="buyrules" ref="buyForm" label-width="100px">
         <el-form-item label="现价" prop="money">
           <el-input-number v-model="buyForm.money" controls-position="right" :min="1"></el-input-number>
@@ -230,6 +230,9 @@ export default {
   }
   .append {
     margin-left: 10px;
+  }
+  ::v-deep .el-input {
+    width: 180px;
   }
 }
 </style>
