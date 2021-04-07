@@ -63,7 +63,7 @@
         <el-form-item label="现价" prop="money">
           <el-input v-model="buyForm.money" @keydown.native.enter="buy"></el-input>
         </el-form-item>
-        <el-form-item label="现价" prop="money">
+        <el-form-item label="止损度" prop="n">
           <el-radio-group v-model="buyForm.n">
             <el-radio :label="1">N</el-radio>
             <el-radio :label="0.5">1/2N</el-radio>
@@ -132,7 +132,7 @@ export default {
       this.$refs.ruleForm.resetFields()
     },
     buyClose() {
-      this.dialogVisible = false
+      this.buyDialog = false
       this.$refs.buyForm.resetFields()
     },
     calculate() {
