@@ -37,20 +37,18 @@
     <el-dialog title="头寸单位计算" :visible.sync="dialogVisible" width="40%" :before-close="handleClose">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="资金总量" prop="money">
-          <el-input v-model="ruleForm.money" @keydown.native.enter="calculate">
-            <template slot="append">W</template>
-          </el-input>
+          <el-input-number v-model="ruleForm.money" controls-position="right" :min="1"></el-input-number>
+          <span class="append">W</span>
         </el-form-item>
         <el-form-item label="合约品种" prop="name">
           <el-input v-model="ruleForm.name" @keydown.native.enter="calculate"></el-input>
         </el-form-item>
         <el-form-item label="ATR" prop="atr">
-          <el-input v-model="ruleForm.atr" @keydown.native.enter="calculate"></el-input>
+          <el-input-number v-model="ruleForm.atr" controls-position="right" :min="1"></el-input-number>
         </el-form-item>
         <el-form-item label="单位交易量" prop="ton">
-          <el-input v-model="ruleForm.ton" @keydown.native.enter="calculate">
-            <template slot="append">t</template>
-          </el-input>
+          <el-input-number v-model="ruleForm.ton" controls-position="right" :min="1"></el-input-number>
+          <span class="append">吨</span>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -61,7 +59,7 @@
     <el-dialog :title="flag == 'buy' ? 'Buy' : 'Sell'" :visible.sync="buyDialog" width="40%" :before-close="buyClose">
       <el-form :model="buyForm" :rules="buyrules" ref="buyForm" label-width="100px">
         <el-form-item label="现价" prop="money">
-          <el-input v-model="buyForm.money" @keydown.native.enter="buy"></el-input>
+          <el-input-number v-model="buyForm.money" controls-position="right" :min="1"></el-input-number>
         </el-form-item>
         <el-form-item label="止损度" prop="n">
           <el-radio-group v-model="buyForm.n">
@@ -123,7 +121,7 @@ export default {
     this.dataList = localStorage.getItem('dataList') ? JSON.parse(localStorage.getItem('dataList')) : ''
     this.flag = localStorage.getItem('flag') ? localStorage.getItem('flag') : ''
     this.nowFlag = localStorage.getItem('nowFlag') ? localStorage.getItem('nowFlag') : ''
-    this.nowN = localStorage.getItem('nowN') ? localStorage.getItem('nowN') : ''
+    this.nowN = localStorage.getItem('nowN') ? localStorage.getItem('nowN') : '1/2N'
   },
   methods: {
     showForm() {
@@ -140,6 +138,10 @@ export default {
     calculate() {
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
+          this.dataList = []
+          this.flag = ''
+          this.nowFlag = ''
+          this.nowN = '1/2N'
           this.company = ((this.ruleForm.money * 100) / (this.ruleForm.atr * this.ruleForm.ton)).toFixed(1)
           this.money = this.ruleForm.money
           this.name = this.ruleForm.name
@@ -225,6 +227,9 @@ export default {
   }
   .btns {
     margin-bottom: 24px;
+  }
+  .append {
+    margin-left: 10px;
   }
 }
 </style>
