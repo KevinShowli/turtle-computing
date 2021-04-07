@@ -28,7 +28,7 @@
         <el-button type="success" @click="showSell">Sell</el-button>
       </div>
     </div>
-    <p v-if="nowFlag">{{ nowFlag }}</p>
+    <p v-if="nowFlag">{{ nowFlag }} {{ nowN }}</p>
     <el-table v-if="dataList.length" :data="dataList">
       <el-table-column type="index" width="50"></el-table-column>
       <el-table-column prop="open" label="Add"></el-table-column>
@@ -65,7 +65,7 @@
         </el-form-item>
         <el-form-item label="止损度" prop="n">
           <el-radio-group v-model="buyForm.n">
-            <el-radio :label="1">N</el-radio>
+            <el-radio :label="1">2N</el-radio>
             <el-radio :label="0.5">1/2N</el-radio>
           </el-radio-group>
         </el-form-item>
@@ -93,9 +93,10 @@ export default {
       dataList: [],
       flag: 'buy',
       nowFlag: '',
+      nowN: '1/2N',
       buyForm: {
         money: '',
-        n: 0.5
+        n: 0.5,
       },
       ruleForm: {
         money: '',
@@ -122,6 +123,7 @@ export default {
     this.dataList = localStorage.getItem('dataList') ? JSON.parse(localStorage.getItem('dataList')) : ''
     this.flag = localStorage.getItem('flag') ? localStorage.getItem('flag') : ''
     this.nowFlag = localStorage.getItem('nowFlag') ? localStorage.getItem('nowFlag') : ''
+    this.nowN = localStorage.getItem('nowN') ? localStorage.getItem('nowN') : ''
   },
   methods: {
     showForm() {
@@ -168,13 +170,16 @@ export default {
             sell: this.buyForm.money - n * this.buyForm.n * 2,
           }
           this.dataList = []
+          this.nowN = this.buyForm.n == 1 ? '2N' : '1/2N'
           if (this.flag == 'buy') {
             this.nowFlag = 'Buy'
             this.dataList.push(no1)
             for (let i = 0; i < 3; i++) {
+              let open = this.dataList[i].open * 1 + this.atr * 0.5
+              let sell = open - n * this.buyForm.n * 2
               this.dataList.push({
-                open: this.dataList[i].open * 1 + n * this.buyForm.n * 2,
-                sell: this.dataList[i].open,
+                open: open.toFixed(1),
+                sell: sell.toFixed(1),
               })
             }
           } else {
@@ -185,9 +190,11 @@ export default {
             }
             this.dataList.push(no1)
             for (let i = 0; i < 3; i++) {
+              let open = this.dataList[i].open * 1 - this.atr * 0.5
+              let sell = open + n * this.buyForm.n * 2
               this.dataList.push({
-                open: this.dataList[i].open * 1 - n * this.buyForm.n * 2,
-                sell: this.dataList[i].open,
+                open: open.toFixed(1),
+                sell: sell.toFixed(1),
               })
             }
           }
@@ -195,6 +202,7 @@ export default {
           this.buyDialog = false
           localStorage.setItem('flag', this.flag)
           localStorage.setItem('nowFlag', this.nowFlag)
+          localStorage.setItem('nowN', this.nowN)
           localStorage.setItem('dataList', JSON.stringify(this.dataList))
         }
       })
