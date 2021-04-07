@@ -41,13 +41,17 @@
           <span class="append">W</span>
         </el-form-item>
         <el-form-item label="合约品种" prop="name">
-          <el-input v-model="ruleForm.name" @keydown.native.enter="calculate"></el-input>
+          <el-input v-model="ruleForm.name"></el-input>
         </el-form-item>
         <el-form-item label="ATR" prop="atr">
           <el-input-number v-model="ruleForm.atr" controls-position="right" :min="1"></el-input-number>
         </el-form-item>
         <el-form-item label="单位交易量" prop="ton">
-          <el-input-number v-model="ruleForm.ton" controls-position="right" :min="1"></el-input-number>
+          <el-input-number
+            v-model="ruleForm.ton"
+            controls-position="right"
+            :min="1"
+          ></el-input-number>
           <span class="append">吨</span>
         </el-form-item>
       </el-form>
@@ -59,7 +63,11 @@
     <el-dialog :title="flag == 'buy' ? 'Buy' : 'Sell'" :visible.sync="buyDialog" width="350px" :before-close="buyClose">
       <el-form :model="buyForm" :rules="buyrules" ref="buyForm" label-width="100px">
         <el-form-item label="现价" prop="money">
-          <el-input-number v-model="buyForm.money" controls-position="right" :min="1"></el-input-number>
+          <el-input-number
+            v-model="buyForm.money"
+            controls-position="right"
+            :min="1"
+          ></el-input-number>
         </el-form-item>
         <el-form-item label="止损度" prop="n">
           <el-radio-group v-model="buyForm.n">
