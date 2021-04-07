@@ -2,12 +2,12 @@
   <div id="turtle">
     <el-tabs v-model="activeIndex" type="card">
       <el-tab-pane
-        v-for="item in editableTabs"
+        v-for="(item, index) in editableTabs"
         :key="item.name"
         :label="item.title"
         :name="item.name"
       >
-        <calcPage :index="activeIndex" />
+        <calcPage :index="index + 1" />
       </el-tab-pane>
     </el-tabs>
   </div>
