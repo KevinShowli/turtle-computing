@@ -34,17 +34,36 @@
       <el-table-column prop="open" label="Add"></el-table-column>
       <el-table-column prop="sell" label="Sell"></el-table-column>
     </el-table>
-    <el-dialog title="头寸单位计算" :visible.sync="dialogVisible" width="350px" :before-close="handleClose">
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+    <el-dialog
+      title="头寸单位计算"
+      :visible.sync="dialogVisible"
+      width="350px"
+      :before-close="handleClose"
+    >
+      <el-form
+        :model="ruleForm"
+        :rules="rules"
+        ref="ruleForm"
+        label-width="100px"
+        class="demo-ruleForm"
+      >
         <el-form-item label="资金总量" prop="money">
-          <el-input-number v-model="ruleForm.money" controls-position="right" :min="1"></el-input-number>
+          <el-input-number
+            v-model="ruleForm.money"
+            controls-position="right"
+            :min="1"
+          ></el-input-number>
           <span class="append">W</span>
         </el-form-item>
         <el-form-item label="合约品种" prop="name">
           <el-input v-model="ruleForm.name"></el-input>
         </el-form-item>
         <el-form-item label="ATR" prop="atr">
-          <el-input-number v-model="ruleForm.atr" controls-position="right" :min="1"></el-input-number>
+          <el-input-number
+            v-model="ruleForm.atr"
+            controls-position="right"
+            :min="1"
+          ></el-input-number>
         </el-form-item>
         <el-form-item label="单位交易量" prop="ton">
           <el-input-number
@@ -60,7 +79,12 @@
         <el-button type="primary" @click="calculate">确 定</el-button>
       </span>
     </el-dialog>
-    <el-dialog :title="flag == 'buy' ? 'Buy' : 'Sell'" :visible.sync="buyDialog" width="350px" :before-close="buyClose">
+    <el-dialog
+      :title="flag == 'buy' ? 'Buy' : 'Sell'"
+      :visible.sync="buyDialog"
+      width="350px"
+      :before-close="buyClose"
+    >
       <el-form :model="buyForm" :rules="buyrules" ref="buyForm" label-width="100px">
         <el-form-item label="现价" prop="money">
           <el-input-number
@@ -88,6 +112,12 @@
 export default {
   name: '',
   components: {},
+  props: {
+    index: {
+      type: String,
+      default: '1',
+    },
+  },
   data() {
     return {
       dialogVisible: false,
@@ -122,14 +152,16 @@ export default {
     }
   },
   mounted() {
-    this.company = localStorage.getItem('company') ? localStorage.getItem('company') : ''
-    this.money = localStorage.getItem('money') ? localStorage.getItem('money') : ''
-    this.name = localStorage.getItem('name') ? localStorage.getItem('name') : ''
-    this.atr = localStorage.getItem('atr') ? localStorage.getItem('atr') : ''
-    this.dataList = localStorage.getItem('dataList') ? JSON.parse(localStorage.getItem('dataList')) : ''
-    this.flag = localStorage.getItem('flag') ? localStorage.getItem('flag') : ''
-    this.nowFlag = localStorage.getItem('nowFlag') ? localStorage.getItem('nowFlag') : ''
-    this.nowN = localStorage.getItem('nowN') ? localStorage.getItem('nowN') : '1/2N'
+    this.company = localStorage.getItem(`${this.index}company`) ? localStorage.getItem(`${this.index}company`) : ''
+    this.money = localStorage.getItem(`${this.index}money`) ? localStorage.getItem(`${this.index}money`) : ''
+    this.name = localStorage.getItem(`${this.index}name`) ? localStorage.getItem(`${this.index}name`) : ''
+    this.atr = localStorage.getItem(`${this.index}atr`) ? localStorage.getItem(`${this.index}atr`) : ''
+    this.dataList = localStorage.getItem(`${this.index}dataList`)
+      ? JSON.parse(localStorage.getItem(`${this.index}dataList`))
+      : ''
+    this.flag = localStorage.getItem(`${this.index}flag`) ? localStorage.getItem(`${this.index}flag`) : ''
+    this.nowFlag = localStorage.getItem(`${this.index}nowFlag`) ? localStorage.getItem(`${this.index}nowFlag`) : ''
+    this.nowN = localStorage.getItem(`${this.index}nowN`) ? localStorage.getItem(`${this.index}nowN`) : '1/2N'
   },
   methods: {
     showForm() {
@@ -150,14 +182,17 @@ export default {
           this.flag = ''
           this.nowFlag = ''
           this.nowN = '1/2N'
-          this.company = ((this.ruleForm.money * 100) / (this.ruleForm.atr * this.ruleForm.ton)).toFixed(1)
+          this.company = (
+            (this.ruleForm.money * 100) /
+            (this.ruleForm.atr * this.ruleForm.ton)
+          ).toFixed(1)
           this.money = this.ruleForm.money
           this.name = this.ruleForm.name
           this.atr = this.ruleForm.atr
-          localStorage.setItem('company', this.company)
-          localStorage.setItem('money', this.money)
-          localStorage.setItem('name', this.name)
-          localStorage.setItem('atr', this.atr)
+          localStorage.setItem(`${this.index}company`, this.company)
+          localStorage.setItem(`${this.index}money`, this.money)
+          localStorage.setItem(`${this.index}name`, this.name)
+          localStorage.setItem(`${this.index}atr`, this.atr)
           this.$refs.ruleForm.resetFields()
           this.dialogVisible = false
         }
@@ -210,10 +245,10 @@ export default {
           }
           this.$refs.buyForm.resetFields()
           this.buyDialog = false
-          localStorage.setItem('flag', this.flag)
-          localStorage.setItem('nowFlag', this.nowFlag)
-          localStorage.setItem('nowN', this.nowN)
-          localStorage.setItem('dataList', JSON.stringify(this.dataList))
+          localStorage.setItem(`${this.index}flag`, this.flag)
+          localStorage.setItem(`${this.index}nowFlag`, this.nowFlag)
+          localStorage.setItem(`${this.index}nowN`, this.nowN)
+          localStorage.setItem(`${this.index}dataList`, JSON.stringify(this.dataList))
         }
       })
     },
