@@ -4,6 +4,9 @@
       <i class="el-icon-plus"></i>
       新增
     </el-button>
+    <el-button v-if="company" type="primary" @click="showEditForm">
+      编辑
+    </el-button>
     <div class="company" v-if="company">
       <div class="msg">
         <p>
@@ -34,20 +37,43 @@
       <el-table-column prop="open" label="Add"></el-table-column>
       <el-table-column prop="sell" label="Sell"></el-table-column>
     </el-table>
-    <el-dialog title="头寸单位计算" :visible.sync="dialogVisible" width="350px" :before-close="handleClose">
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+    <el-dialog
+      title="头寸单位计算"
+      :visible.sync="dialogVisible"
+      width="350px"
+      :before-close="handleClose"
+    >
+      <el-form
+        :model="ruleForm"
+        :rules="rules"
+        ref="ruleForm"
+        label-width="100px"
+        class="demo-ruleForm"
+      >
         <el-form-item label="资金总量" prop="money">
-          <el-input-number v-model="ruleForm.money" controls-position="right" :min="1"></el-input-number>
+          <el-input-number
+            v-model="ruleForm.money"
+            controls-position="right"
+            :min="1"
+          ></el-input-number>
           <span class="append">W</span>
         </el-form-item>
         <el-form-item label="合约品种" prop="name">
           <el-input v-model="ruleForm.name"></el-input>
         </el-form-item>
         <el-form-item label="ATR" prop="atr">
-          <el-input-number v-model="ruleForm.atr" controls-position="right" :min="1"></el-input-number>
+          <el-input-number
+            v-model="ruleForm.atr"
+            controls-position="right"
+            :min="1"
+          ></el-input-number>
         </el-form-item>
         <el-form-item label="单位交易量" prop="ton">
-          <el-input-number v-model="ruleForm.ton" controls-position="right" :min="1"></el-input-number>
+          <el-input-number
+            v-model="ruleForm.ton"
+            controls-position="right"
+            :min="1"
+          ></el-input-number>
           <span class="append">吨</span>
         </el-form-item>
       </el-form>
@@ -56,10 +82,19 @@
         <el-button type="primary" @click="calculate">确 定</el-button>
       </span>
     </el-dialog>
-    <el-dialog :title="flag == 'buy' ? 'Buy' : 'Sell'" :visible.sync="buyDialog" width="350px" :before-close="buyClose">
+    <el-dialog
+      :title="flag == 'buy' ? 'Buy' : 'Sell'"
+      :visible.sync="buyDialog"
+      width="350px"
+      :before-close="buyClose"
+    >
       <el-form :model="buyForm" :rules="buyrules" ref="buyForm" label-width="100px">
         <el-form-item label="现价" prop="money">
-          <el-input-number v-model="buyForm.money" controls-position="right" :min="1"></el-input-number>
+          <el-input-number
+            v-model="buyForm.money"
+            controls-position="right"
+            :min="1"
+          ></el-input-number>
         </el-form-item>
         <el-form-item label="止损度" prop="n">
           <el-radio-group v-model="buyForm.n">
@@ -94,6 +129,7 @@ export default {
       money: '',
       name: '',
       atr: '',
+      ton: '',
       dataList: [],
       flag: 'buy',
       nowFlag: '',
@@ -120,19 +156,43 @@ export default {
     }
   },
   mounted() {
-    this.company = localStorage.getItem(`${this.index}company`) ? localStorage.getItem(`${this.index}company`) : ''
-    this.money = localStorage.getItem(`${this.index}money`) ? localStorage.getItem(`${this.index}money`) : ''
-    this.name = localStorage.getItem(`${this.index}name`) ? localStorage.getItem(`${this.index}name`) : ''
-    this.atr = localStorage.getItem(`${this.index}atr`) ? localStorage.getItem(`${this.index}atr`) : ''
+    this.company = localStorage.getItem(`${this.index}company`)
+      ? localStorage.getItem(`${this.index}company`)
+      : ''
+      this.ton = localStorage.getItem(`${this.index}ton`)
+      ? localStorage.getItem(`${this.index}ton`)
+      : ''
+    this.money = localStorage.getItem(`${this.index}money`)
+      ? localStorage.getItem(`${this.index}money`)
+      : ''
+    this.name = localStorage.getItem(`${this.index}name`)
+      ? localStorage.getItem(`${this.index}name`)
+      : ''
+    this.atr = localStorage.getItem(`${this.index}atr`)
+      ? localStorage.getItem(`${this.index}atr`)
+      : ''
     this.dataList = localStorage.getItem(`${this.index}dataList`)
       ? JSON.parse(localStorage.getItem(`${this.index}dataList`))
       : ''
-    this.flag = localStorage.getItem(`${this.index}flag`) ? localStorage.getItem(`${this.index}flag`) : ''
-    this.nowFlag = localStorage.getItem(`${this.index}nowFlag`) ? localStorage.getItem(`${this.index}nowFlag`) : ''
-    this.nowN = localStorage.getItem(`${this.index}nowN`) ? localStorage.getItem(`${this.index}nowN`) : '1/2N'
+    this.flag = localStorage.getItem(`${this.index}flag`)
+      ? localStorage.getItem(`${this.index}flag`)
+      : ''
+    this.nowFlag = localStorage.getItem(`${this.index}nowFlag`)
+      ? localStorage.getItem(`${this.index}nowFlag`)
+      : ''
+    this.nowN = localStorage.getItem(`${this.index}nowN`)
+      ? localStorage.getItem(`${this.index}nowN`)
+      : '1/2N'
   },
   methods: {
     showForm() {
+      this.dialogVisible = true
+    },
+    showEditForm() {
+      this.ruleForm.money = this.money
+      this.ruleForm.name = this.name
+      this.ruleForm.atr = this.atr
+      this.ruleForm.ton = this.ton
       this.dialogVisible = true
     },
     handleClose() {
@@ -150,11 +210,16 @@ export default {
           this.flag = ''
           this.nowFlag = ''
           this.nowN = '1/2N'
-          this.company = ((this.ruleForm.money * 100) / (this.ruleForm.atr * this.ruleForm.ton)).toFixed(1)
+          this.company = (
+            (this.ruleForm.money * 100) /
+            (this.ruleForm.atr * this.ruleForm.ton)
+          ).toFixed(1)
           this.money = this.ruleForm.money
           this.name = this.ruleForm.name
           this.atr = this.ruleForm.atr
+          this.ton = this.ruleForm.ton
           localStorage.setItem(`${this.index}company`, this.company)
+          localStorage.setItem(`${this.index}ton`, this.ton)
           localStorage.setItem(`${this.index}money`, this.money)
           localStorage.setItem(`${this.index}name`, this.name)
           localStorage.setItem(`${this.index}atr`, this.atr)
@@ -162,7 +227,7 @@ export default {
           this.dialogVisible = false
           this.$emit('titleChange', {
             name: this.name,
-            index: this.index
+            index: this.index,
           })
         }
       })
