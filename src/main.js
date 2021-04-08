@@ -12,6 +12,7 @@ import {
   Dialog,
   InputNumber,
   Input,
+  Switch,
   Radio,
   RadioGroup,
 } from 'element-ui'
@@ -28,6 +29,7 @@ Vue.use(TableColumn)
 Vue.use(FormItem)
 Vue.use(Tabs)
 Vue.use(TabPane)
+Vue.use(Switch)
 
 Vue.config.productionTip = false
 
