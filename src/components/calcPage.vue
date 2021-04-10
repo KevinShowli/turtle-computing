@@ -270,7 +270,7 @@ export default {
               sell: this.buyForm.money * 1 + n * this.buyForm.n * 2,
             }
             this.dataList.push(no1)
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < 9; i++) {
               let open = this.dataList[i].open * 1 - this.atr * 0.5
               let sell = open + n * this.buyForm.n * 2
               this.dataList.push({
