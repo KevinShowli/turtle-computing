@@ -31,7 +31,9 @@
         <el-button type="success" @click="showSell">Sell</el-button>
       </div>
     </div>
-    <p v-if="nowFlag">{{ nowFlag }} {{ nowN }}</p>
+    <p class="colorFlag" :class="{ red: nowFlag == 'Buy' }" v-if="nowFlag">
+      {{ nowFlag }} {{ nowN }}
+    </p>
     <el-table v-if="dataList.length" :data="dataList">
       <el-table-column type="index" width="50"></el-table-column>
       <el-table-column prop="open" label="Add"></el-table-column>
@@ -159,7 +161,7 @@ export default {
     this.company = localStorage.getItem(`${this.index}company`)
       ? localStorage.getItem(`${this.index}company`)
       : ''
-      this.ton = localStorage.getItem(`${this.index}ton`)
+    this.ton = localStorage.getItem(`${this.index}ton`)
       ? localStorage.getItem(`${this.index}ton`)
       : ''
     this.money = localStorage.getItem(`${this.index}money`)
@@ -253,7 +255,7 @@ export default {
           if (this.flag == 'buy') {
             this.nowFlag = 'Buy'
             this.dataList.push(no1)
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < 9; i++) {
               let open = this.dataList[i].open * 1 + this.atr * 0.5
               let sell = open - n * this.buyForm.n * 2
               this.dataList.push({
@@ -313,6 +315,14 @@ export default {
   }
   ::v-deep .el-input {
     width: 180px;
+  }
+  .colorFlag {
+    padding: 10px;
+    color: #fff;
+    background-color: #67c23a;
+    &.red {
+      background-color: #f56c6c;
+    }
   }
 }
 </style>
